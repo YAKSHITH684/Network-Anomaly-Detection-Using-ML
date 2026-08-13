@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+venv/
+.env
+uploads/*.csv
+!uploads/.gitkeep
+models/*.joblib
+!models/.gitkeep

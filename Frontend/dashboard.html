@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Main Dashboard — Anomaly Detection</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <div class="container">
+
+    <div id="flash"></div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-8">
+        <h1 class="animated-title">Main Dashboard</h1>
+        <div class="subtitle">Network traffic anomaly detection — upload, train, evaluate, predict.</div>
+      </div>
+      <div class="col-4 text-end">
+        <span class="text-light small me-2" id="whoami"></span>
+        <button class="btn btn-outline-light" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <!-- Log Panel -->
+      <div class="col-md-5">
+        <div class="log-panel">
+          <h5>Logs / Results</h5>
+          <hr class="my-2">
+          <div id="logLines"><div class="text-muted">No logs yet.</div></div>
+        </div>
+      </div>
+
+      <!-- Buttons + Preview -->
+      <div class="col-md-7">
+        <div class="glass">
+          <div class="row">
+
+            <!-- Upload -->
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Upload Dataset (CSV)</label>
+              <label class="dropzone d-block mb-2" id="uploadZone">
+                <input class="d-none" type="file" id="uploadInput" accept=".csv">
+                <div>Drag &amp; drop a CSV here, or click to browse</div>
+                <div class="filename small mt-1" id="uploadFilename">No file chosen</div>
+              </label>
+              <div class="d-grid">
+                <button class="btn btn-success" id="uploadBtn">Upload Dataset</button>
+              </div>
+            </div>
+
+            <!-- Preprocess -->
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Prepare training data</label>
+              <div class="glass p-3" style="background:#f3fbf8; box-shadow:none;">
+                <p class="small text-muted mb-2">Cleans, encodes and scales the uploaded dataset, then splits it into train/test sets. Requires an <code>attack_type</code> label column.</p>
+                <div class="d-grid">
+                  <button class="btn btn-warning" id="preprocessBtn">Preprocess &amp; Split</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Model Buttons -->
+            <div class="col-md-12 mt-2">
+              <label class="form-label">Train a model</label>
+              <div class="d-flex flex-wrap gap-2" id="modelButtons"></div>
+            </div>
+
+            <!-- Graphs -->
+            <div class="col-md-6 mt-4">
+              <button class="btn btn-info w-100" id="graphsBtn">Show Accuracy Graphs</button>
+            </div>
+
+            <!-- Predict -->
+            <div class="col-md-6 mt-4">
+              <label class="dropzone d-block mb-2" id="predictZone">
+                <input class="d-none" type="file" id="predictInput" accept=".csv">
+                <div>Predict: drag &amp; drop a CSV to classify</div>
+                <div class="filename small mt-1" id="predictFilename">No file chosen</div>
+              </label>
+              <div class="d-grid">
+                <button class="btn btn-dark" id="predictBtn">Predict</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Dataset Preview -->
+        <div class="mt-3 glass p-3">
+          <h6>Dataset Preview (first 5 rows)</h6>
+          <div class="table-wrap" id="previewTable">
+            <div class="text-muted">No dataset uploaded yet.</div>
+          </div>
+        </div>
+
+        <!-- Graphs -->
+        <div class="mt-3 glass p-3 hidden" id="graphsSection">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0 section-title">Accuracy Graphs</h6>
+            <button class="btn btn-sm btn-outline-secondary" id="closeGraphsBtn">Close</button>
+          </div>
+          <div class="row">
+            <div class="col-md-6"><img id="accImg" class="img-fluid rounded" /></div>
+            <div class="col-md-6"><img id="pieImg" class="img-fluid rounded" /></div>
+          </div>
+        </div>
+
+        <!-- Predictions -->
+        <div class="mt-3 glass p-3 hidden" id="predictSection">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0 section-title">Predictions <span class="small text-muted" id="predictModelUsed"></span></h6>
+            <button class="btn btn-sm btn-outline-secondary" id="closePredictBtn">Close</button>
+          </div>
+          <div class="table-wrap" id="predictTable"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="env.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
