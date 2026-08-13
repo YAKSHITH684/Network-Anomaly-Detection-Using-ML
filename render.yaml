@@ -1,5 +1,3 @@
-services:
-  # Backend: Flask API
   - type: web
     name: anomaly-detection-backend
     runtime: python
@@ -8,23 +6,9 @@ services:
     startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT
     healthCheckPath: /api/health
     envVars:
-      - key: SECRET_KEY
-        generateValue: true
       - key: PYTHON_VERSION
         value: 3.12.3
+      - key: SECRET_KEY
+        generateValue: true
       - key: CORS_ORIGINS
         value: "*"
-
-  # Frontend: Static Site
-  - type: web
-    name: anomaly-detection-frontend
-    runtime: static
-    rootDir: Frontend
-    buildCommand: echo "window.DEFAULT_API_BASE_URL = 'https://$BACKEND_HOST';" > env.js
-    staticPublishPath: .
-    envVars:
-      - key: BACKEND_HOST
-        fromService:
-          name: anomaly-detection-backend
-          type: web
-          property: host
