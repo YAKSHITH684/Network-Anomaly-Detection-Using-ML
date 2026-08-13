@@ -877,3 +877,191 @@ body.p-4 {
   }
 
 }
+
+/* ============================================================
+   FULL-WIDTH DATA PANELS
+   Dataset Preview + Predictions
+   ============================================================ */
+
+/*
+   The dashboard uses:
+
+   .container
+      .row
+         .col-md-7
+            .data-panel
+
+   These panels keep their current LEFT position but extend
+   all the way to the browser's RIGHT edge.
+*/
+
+.data-panel {
+  width: calc(100vw - 40px);
+  max-width: none;
+  box-sizing: border-box;
+
+  position: relative;
+  z-index: 1;
+}
+
+/* Make the table occupy the complete panel width */
+.data-panel .table-wrap {
+  width: 100%;
+  max-width: none;
+
+  overflow-x: auto;
+  overflow-y: auto;
+
+  box-sizing: border-box;
+}
+
+/* Allow wide datasets to scroll horizontally */
+.data-panel table {
+  width: max-content;
+  min-width: 100%;
+}
+
+
+/* ============================================================
+   DESKTOP — BOOTSTRAP CONTAINER BREAKOUT
+   ============================================================ */
+
+@media (min-width: 1400px) {
+
+  /*
+     Bootstrap .container = 1320px
+
+     The panel is inside col-md-7, which starts after
+     5/12 of the container.
+
+     This calculates the exact remaining width from the
+     panel's current left position to the viewport edge.
+  */
+
+  .data-panel {
+    width: calc(
+      100vw
+      - ((100vw - 1320px) / 2)
+      - 550px
+    );
+  }
+}
+
+
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+
+  /*
+     Bootstrap .container = 1140px
+  */
+
+  .data-panel {
+    width: calc(
+      100vw
+      - ((100vw - 1140px) / 2)
+      - 475px
+    );
+  }
+}
+
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+
+  /*
+     Bootstrap .container = 960px
+  */
+
+  .data-panel {
+    width: calc(
+      100vw
+      - ((100vw - 960px) / 2)
+      - 400px
+    );
+  }
+}
+
+
+/* ============================================================
+   TABLE SCROLLBAR
+   ============================================================ */
+
+.data-panel .table-wrap::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.data-panel .table-wrap::-webkit-scrollbar-track {
+  background: var(--bg-elevated);
+  border-radius: 10px;
+}
+
+.data-panel .table-wrap::-webkit-scrollbar-thumb {
+  background: var(--text-faint);
+  border-radius: 10px;
+  border: 2px solid var(--bg-elevated);
+}
+
+.data-panel .table-wrap::-webkit-scrollbar-thumb:hover {
+  background: var(--mint);
+}
+
+
+/* ============================================================
+   TABLE CELLS
+   Prevent headers from wrapping
+   ============================================================ */
+
+.data-panel table th,
+.data-panel table td {
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   TABLE HEADER
+   ============================================================ */
+
+.data-panel table thead th {
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   TABLET / MOBILE
+   ============================================================ */
+
+@media (max-width: 991.98px) {
+
+  /*
+     At smaller widths the Bootstrap columns stack,
+     so there is no need for a breakout.
+  */
+
+  .data-panel {
+    width: 100%;
+    max-width: 100%;
+    margin-right: 0;
+  }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 576px) {
+
+  .data-panel {
+    padding: 12px !important;
+    border-radius: 10px;
+  }
+
+  .data-panel .table-wrap {
+    max-height: 60vh;
+  }
+
+  .data-panel table {
+    font-size: 0.78rem;
+  }
+
+}
