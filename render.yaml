@@ -1,10 +1,9 @@
 services:
-  # ---- Backend: Flask JSON API ----
+  # Backend: Flask API
   - type: web
     name: anomaly-detection-backend
-    env: python
-    plan: free
-    rootDir: backend
+    runtime: python
+    rootDir: Backend
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT
     healthCheckPath: /api/health
@@ -13,22 +12,14 @@ services:
         generateValue: true
       - key: PYTHON_VERSION
         value: 3.12.3
-      # Tighten this to your frontend's exact URL once you know it, e.g.
-      # https://anomaly-detection-frontend.onrender.com
       - key: CORS_ORIGINS
         value: "*"
 
-  # ---- Frontend: static HTML/CSS/JS ----
-  # buildCommand writes env.js with the backend's real URL so the frontend
-  # talks to it automatically. If you'd rather not rely on that, you can
-  # instead leave env.js blank and just paste the backend URL into the
-  # "Backend API" box at the top of the page after deploying (it's saved
-  # in the browser's localStorage).
+  # Frontend: Static Site
   - type: web
     name: anomaly-detection-frontend
-    env: static
-    plan: free
-    rootDir: frontend
+    runtime: static
+    rootDir: Frontend
     buildCommand: echo "window.DEFAULT_API_BASE_URL = 'https://$BACKEND_HOST';" > env.js
     staticPublishPath: .
     envVars:
