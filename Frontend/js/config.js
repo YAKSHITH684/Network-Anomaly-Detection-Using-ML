@@ -1,41 +1,40 @@
-// config.js — resolves which backend API URL the frontend should call.
-//
-// Because the frontend (static site) and backend (Flask API) are deployed
-// as two separate Render services with two separate URLs, the frontend
-// needs to know where the backend lives. Resolution order:
-//
-//   1. ?api=https://your-backend.onrender.com query param (sets & persists)
-//   2. localStorage["ANOMALY_API_BASE_URL"] (set by #1, or by the settings UI)
-//   3. window.DEFAULT_API_BASE_URL, optionally written by a build step
-//   4. same-origin fallback (useful when testing everything on localhost)
+// config.js — Backend API configuration
 
 const API_BASE_URL_KEY = "ANOMALY_API_BASE_URL";
 
-
+// Your deployed Flask backend on Render
+const DEFAULT_API_BASE_URL =
+  "https://network-anomaly-detection-using-ml.onrender.com";
 
 function getApiBase() {
-
   const params = new URLSearchParams(window.location.search);
   const fromQuery = params.get("api");
 
+  // Allow ?api=... to override and save the backend URL
   if (fromQuery) {
-    localStorage.setItem(API_BASE_URL_KEY, fromQuery.replace(/\/+$/, ""));
+    const url = fromQuery.replace(/\/+$/, "");
+    localStorage.setItem(API_BASE_URL_KEY, url);
+    return url;
   }
 
-
+  // Use previously saved backend URL
   const stored = localStorage.getItem(API_BASE_URL_KEY);
-  if (stored) return stored.replace(/\/+$/, "");
 
-  if (typeof window.DEFAULT_API_BASE_URL === "string" && window.DEFAULT_API_BASE_URL) {
-    return window.DEFAULT_API_BASE_URL.replace(/\/+$/, "");
+  if (stored) {
+    return stored.replace(/\/+$/, "");
   }
 
-  // Local dev fallback: assume Flask is running on localhost:5000.
-  return "http://127.0.0.1:5000";
+  // Use deployed Render backend by default
+  return DEFAULT_API_BASE_URL;
 }
 
 function setApiBase(url) {
-  localStorage.setItem(API_BASE_URL_KEY, url.replace(/\/+$/, ""));
+  if (!url) return;
+
+  localStorage.setItem(
+    API_BASE_URL_KEY,
+    url.replace(/\/+$/, "")
+  );
 }
 
 function getToken() {
