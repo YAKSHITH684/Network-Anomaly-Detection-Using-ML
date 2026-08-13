@@ -1,40 +1,32 @@
 /* ============================================================
    Anomaly Detection Dashboard — IntervuX-matched dark theme
-   Mint / Sky HUD aesthetic
+   (mint / sky HUD aesthetic — same tokens as the marketing site)
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-
-/* ============================================================
-   ROOT VARIABLES
-   ============================================================ */
-
 :root {
-  --bg: #05070B;
-  --bg-elevated: #0A0F17;
-  --surface: #0E1520;
-  --surface-2: #151E2C;
+  --bg:            #05070B;
+  --bg-elevated:   #0A0F17;
+  --surface:       #0E1520;
+  --surface-2:     #151E2C;
+  --border:        rgba(0,230,195,0.14);
+  --border-strong: rgba(0,230,195,0.32);
 
-  --border: rgba(0, 230, 195, 0.14);
-  --border-strong: rgba(0, 230, 195, 0.32);
+  --text:          #E9EEF7;
+  --text-muted:    #8996AC;
+  --text-faint:    #4C5872;
 
-  --text: #E9EEF7;
-  --text-muted: #8996AC;
-  --text-faint: #4C5872;
+  --mint:          #00E6C3;
+  --mint-deep:     #00B39B;
+  --mint-dim:      rgba(0,230,195,0.13);
+  --sky:           #8C6FFF;
+  --sky-deep:      #6C4EF0;
+  --sky-dim:       rgba(140,111,255,0.16);
+  --coral:         #FF4D89;
+  --amber:         #FFB020;
 
-  --mint: #00E6C3;
-  --mint-deep: #00B39B;
-  --mint-dim: rgba(0, 230, 195, 0.13);
-
-  --sky: #8C6FFF;
-  --sky-deep: #6C4EF0;
-  --sky-dim: rgba(140, 111, 255, 0.16);
-
-  --coral: #FF4D89;
-  --amber: #FFB020;
-
-  /* Legacy variables */
+  /* legacy variable names kept so nothing relying on them breaks */
   --accent: var(--sky);
   --accent-2: var(--mint-deep);
   --danger: var(--coral);
@@ -43,96 +35,45 @@
   --text-dark: var(--text);
 
   --display: 'Space Grotesk', 'Inter', sans-serif;
-  --body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
 
   --radius: 14px;
   --radius-sm: 8px;
 }
 
-
-/* ============================================================
-   GLOBAL
-   ============================================================ */
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  width: 100%;
-  overflow-x: hidden;
-}
+* { box-sizing: border-box; }
 
 body {
   min-height: 100vh;
-  width: 100%;
-  margin: 0;
-
   font-family: var(--body);
-
   background:
-    radial-gradient(
-      ellipse 900px 500px at 18% -5%,
-      rgba(0, 230, 195, 0.10),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 700px 500px at 100% 20%,
-      rgba(140, 111, 255, 0.12),
-      transparent 60%
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.014) 0px,
-      rgba(255, 255, 255, 0.014) 1px,
-      transparent 1px,
-      transparent 42px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.014) 0px,
-      rgba(255, 255, 255, 0.014) 1px,
-      transparent 1px,
-      transparent 42px
-    ),
+    radial-gradient(ellipse 900px 500px at 18% -5%, rgba(0,230,195,0.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 20%, rgba(140,111,255,0.12), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.014) 0px, rgba(255,255,255,0.014) 1px, transparent 1px, transparent 42px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.014) 0px, rgba(255,255,255,0.014) 1px, transparent 1px, transparent 42px),
     var(--bg);
-
   background-attachment: fixed;
   color: var(--text);
-
   -webkit-font-smoothing: antialiased;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--display);
   letter-spacing: -0.01em;
 }
 
-::selection {
-  background: var(--mint);
-  color: #04120E;
-}
-
+::selection { background: var(--mint); color: #04120E; }
 
 /* ============================================================
-   GLASS PANELS
+   Glass panels
    ============================================================ */
-
 .glass {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 20px;
-
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.45);
-
+  box-shadow: 0 20px 44px rgba(0,0,0,0.45);
   backdrop-filter: blur(10px);
 }
 
@@ -142,7 +83,6 @@ h2.animated-title {
   font-weight: 700;
   font-size: 1.9rem;
   letter-spacing: -0.02em;
-
   color: var(--text) !important;
   text-shadow: none !important;
 }
@@ -154,27 +94,20 @@ h2.animated-title {
   font-family: var(--mono);
 }
 
-
 /* ============================================================
-   LOG PANEL
+   Log panel — mission-control readout, mirrors the transcript
+   card on the marketing site
    ============================================================ */
-
 .log-panel {
   height: 60vh;
   overflow: auto;
-
   background: var(--bg-elevated);
   color: var(--text);
-
   padding: 16px;
   border-radius: var(--radius);
   border: 1px solid var(--border-strong);
-
   font-size: 0.85rem;
-
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.45),
-    0 0 30px rgba(0, 230, 195, 0.05);
+  box-shadow: 0 20px 44px rgba(0,0,0,0.45), 0 0 30px rgba(0,230,195,0.05);
 }
 
 .log-panel h5 {
@@ -191,13 +124,10 @@ h2.animated-title {
 .log-line {
   font-family: var(--mono);
   white-space: pre-wrap;
-
   margin-bottom: 8px;
   padding: 8px 10px;
-
   border-radius: 8px;
   background: var(--surface);
-
   border-left: 3px solid var(--mint);
   color: var(--text-muted);
 }
@@ -205,116 +135,64 @@ h2.animated-title {
 .log-line.err {
   border-left-color: var(--coral);
   color: #ffb3c8;
-  background: rgba(255, 77, 137, 0.08);
+  background: rgba(255,77,137,0.08);
 }
 
-
 /* ============================================================
-   BUTTONS
+   Buttons — Bootstrap contextual classes remapped to theme
    ============================================================ */
-
 .btn {
   border-radius: var(--radius-sm) !important;
   font-weight: 600;
   font-size: 13.5px;
   border: none;
-
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease,
-    background 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
-
-.btn:hover {
-  transform: translateY(-2px);
-}
-
-.btn:active {
-  transform: translateY(0);
-}
-
-.btn:focus {
-  box-shadow:
-    0 0 0 3px rgba(140, 111, 255, 0.35) !important;
-}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:focus { box-shadow: 0 0 0 3px rgba(140,111,255,0.35) !important; }
 
 .btn-primary {
   background: var(--sky);
   color: #0A0620;
-
-  box-shadow:
-    0 0 0 1px rgba(140, 111, 255, 0.4),
-    0 8px 22px rgba(140, 111, 255, 0.25);
+  box-shadow: 0 0 0 1px rgba(140,111,255,0.4), 0 8px 22px rgba(140,111,255,0.25);
 }
-
-.btn-primary:hover,
-.btn-primary:focus {
-  background: #9F86FF;
-  color: #0A0620;
-}
+.btn-primary:hover, .btn-primary:focus { background: #9F86FF; color: #0A0620; }
 
 .btn-success {
   background: var(--mint);
   color: #04120E;
-
-  box-shadow:
-    0 0 0 1px rgba(0, 230, 195, 0.4),
-    0 8px 22px rgba(0, 230, 195, 0.28);
+  box-shadow: 0 0 0 1px rgba(0,230,195,0.4), 0 8px 22px rgba(0,230,195,0.28);
 }
-
-.btn-success:hover,
-.btn-success:focus {
-  background: #1FF2D2;
-  color: #04120E;
-}
+.btn-success:hover, .btn-success:focus { background: #1FF2D2; color: #04120E; }
 
 .btn-warning {
   background: var(--amber);
   color: #241600;
-
-  box-shadow:
-    0 0 0 1px rgba(255, 176, 32, 0.4),
-    0 8px 22px rgba(255, 176, 32, 0.25);
+  box-shadow: 0 0 0 1px rgba(255,176,32,0.4), 0 8px 22px rgba(255,176,32,0.25);
 }
-
-.btn-warning:hover,
-.btn-warning:focus {
-  background: #FFC24D;
-  color: #241600;
-}
+.btn-warning:hover, .btn-warning:focus { background: #FFC24D; color: #241600; }
 
 .btn-info {
   background: var(--sky-dim);
   color: var(--sky);
-  border: 1px solid rgba(140, 111, 255, 0.4) !important;
+  border: 1px solid rgba(140,111,255,0.4) !important;
 }
-
-.btn-info:hover,
-.btn-info:focus {
-  background: rgba(140, 111, 255, 0.28);
-  color: var(--text);
-}
+.btn-info:hover, .btn-info:focus { background: rgba(140,111,255,0.28); color: var(--text); }
 
 .btn-dark {
   background: var(--surface-2);
   color: var(--text);
   border: 1px solid var(--border-strong) !important;
 }
-
-.btn-dark:hover,
-.btn-dark:focus {
-  background: var(--bg-elevated);
-  color: var(--mint);
-}
+.btn-dark:hover, .btn-dark:focus { background: var(--bg-elevated); color: var(--mint); }
 
 .btn-outline-light {
   background: transparent;
   color: var(--text);
   border: 1px solid var(--border-strong) !important;
 }
-
-.btn-outline-light:hover,
-.btn-outline-light:focus {
+.btn-outline-light:hover, .btn-outline-light:focus {
   background: var(--mint-dim);
   color: var(--mint);
   border-color: var(--mint) !important;
@@ -325,7 +203,6 @@ h2.animated-title {
   color: var(--text-muted);
   border: 1px solid var(--border) !important;
 }
-
 .btn-outline-secondary:hover {
   background: var(--surface-2);
   color: var(--text);
@@ -348,44 +225,32 @@ h2.animated-title {
 }
 
 .model-btn .badge {
-  background: rgba(4, 18, 14, 0.35) !important;
+  background: rgba(4,18,14,0.35) !important;
   color: inherit !important;
 }
 
-
 /* ============================================================
-   DROPZONE
+   Dropzones
    ============================================================ */
-
 .dropzone {
   border: 2px dashed var(--border-strong);
   border-radius: var(--radius-sm);
-
   padding: 18px;
   text-align: center;
-
   color: var(--text-muted);
   background: var(--bg-elevated);
-
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease;
-
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
   cursor: pointer;
 }
-
 .dropzone:hover {
   border-color: var(--mint);
   color: var(--text);
 }
-
 .dropzone.dragover {
   border-color: var(--mint);
   background: var(--mint-dim);
   color: var(--mint);
 }
-
 .dropzone .filename {
   font-weight: 600;
   color: var(--text);
@@ -393,675 +258,213 @@ h2.animated-title {
   font-size: 12px;
 }
 
-
 /* ============================================================
-   METRIC CARDS
+   Metric cards (available for future use)
    ============================================================ */
-
 .metric-card {
   border-radius: var(--radius-sm);
   padding: 14px 16px;
-
   background: var(--surface-2);
   border: 1px solid var(--border);
 }
-
 .metric-card .value {
   font-size: 1.6rem;
   font-weight: 800;
-
   color: var(--mint);
   font-family: var(--display);
 }
-
 .metric-card .label {
   font-size: 0.8rem;
   color: var(--text-faint);
-
   text-transform: uppercase;
   letter-spacing: 0.08em;
-
   font-family: var(--mono);
 }
 
-
 /* ============================================================
-   TABLES
+   Tables
    ============================================================ */
-
 .table-wrap {
   max-height: 55vh;
-
-  overflow-x: auto;
-  overflow-y: auto;
-
+  overflow: auto;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-
-  width: 100%;
 }
-
-/* Table itself can become wider than the screen */
 table.table-striped {
   font-size: 0.85rem;
   color: var(--text);
-
   margin-bottom: 0;
-
-  width: max-content;
-  min-width: 100%;
 }
-
 table.table-striped thead {
   position: sticky;
   top: 0;
-
   background: var(--bg-elevated);
   color: var(--mint);
-
   font-family: var(--mono);
   font-size: 11px;
-
   text-transform: uppercase;
   letter-spacing: 0.05em;
-
   z-index: 1;
 }
-
 table.table-striped tbody tr {
   background: var(--surface) !important;
   color: var(--text);
-
   border-color: var(--border) !important;
 }
-
 table.table-striped tbody tr:nth-of-type(odd) {
   background: var(--surface-2) !important;
 }
-
-table.table-striped td,
-table.table-striped th {
+table.table-striped td, table.table-striped th {
   border-color: var(--border) !important;
 }
 
-
 /* ============================================================
-   DATASET PREVIEW + PREDICTIONS
-   ============================================================
-   
-   These are the .glass panels containing .table-wrap.
-
-   The panels keep their existing LEFT position but expand
-   horizontally until the RIGHT edge of the browser.
+   Toast
    ============================================================ */
-
-.glass:has(.table-wrap) {
-  width: calc(100vw - 40px);
-  max-width: none;
-
-  /*
-     Negative right margin removes the extra Bootstrap/container
-     space on the right.
-  */
-  margin-right: 0;
-
-  /*
-     Prevent the panel itself from being clipped.
-  */
-  overflow: visible;
-
-  position: relative;
-}
-
-/*
-   If the panel is inside a centered Bootstrap container,
-   this version expands the right side toward the viewport edge.
-*/
-.container .glass:has(.table-wrap),
-.container-fluid .glass:has(.table-wrap) {
-  width: calc(100vw - 40px);
-}
-
-/*
-   The table area fills the complete expanded panel.
-*/
-.glass:has(.table-wrap) .table-wrap {
-  width: 100%;
-  max-width: none;
-
-  overflow-x: auto;
-  overflow-y: auto;
-}
-
-/*
-   Keep all dataset columns available through horizontal scrolling.
-*/
-.glass:has(.table-wrap) table {
-  width: max-content;
-  min-width: 100%;
-}
-
-
-/* ============================================================
-   BOOTSTRAP COLUMN OVERRIDE
-   ============================================================
-   
-   Prevent the table panels from being limited by col-lg-*
-   or col-xl-* width.
-   ============================================================ */
-
-.glass:has(.table-wrap) {
-  flex: 0 0 auto;
-}
-
-
-/* ============================================================
-   TABLE SCROLLBAR
-   ============================================================ */
-
-.glass:has(.table-wrap) .table-wrap::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-.glass:has(.table-wrap) .table-wrap::-webkit-scrollbar-track {
-  background: var(--bg-elevated);
-  border-radius: 10px;
-}
-
-.glass:has(.table-wrap) .table-wrap::-webkit-scrollbar-thumb {
-  background: var(--text-faint);
-  border-radius: 10px;
-
-  border: 2px solid var(--bg-elevated);
-}
-
-.glass:has(.table-wrap) .table-wrap::-webkit-scrollbar-thumb:hover {
-  background: var(--mint);
-}
-
-
-/* ============================================================
-   TOAST
-   ============================================================ */
-
 #toast {
   position: fixed;
-
   bottom: 20px;
   right: 20px;
-
   background: var(--bg-elevated);
   color: var(--text);
-
   border: 1px solid var(--border-strong);
-
   padding: 12px 18px;
   border-radius: var(--radius-sm);
-
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(0, 230, 195, 0.12);
-
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0,230,195,0.12);
   opacity: 0;
   transform: translateY(10px);
-
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
-
+  transition: opacity 0.25s ease, transform 0.25s ease;
   pointer-events: none;
   z-index: 2000;
-
   font-size: 0.9rem;
   font-family: var(--body);
 }
-
 #toast.show {
   opacity: 1;
   transform: translateY(0);
 }
 
-
 /* ============================================================
-   API / BACKEND STATUS BAR
+   API / backend status bar
    ============================================================ */
-
 .api-bar {
   font-size: 0.8rem;
   color: var(--text-muted);
-
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-
   margin-bottom: 14px;
-
   font-family: var(--mono);
 }
-
 .api-bar input {
   max-width: 340px;
-
   background: var(--surface-2);
   border: 1px solid var(--border);
-
   color: var(--text);
 }
-
-.api-bar input::placeholder {
-  color: var(--text-faint);
-}
-
+.api-bar input::placeholder { color: var(--text-faint); }
 .api-bar input:focus {
   background: var(--surface-2);
   border-color: var(--sky-deep);
-
   color: var(--text);
-
-  box-shadow:
-    0 0 0 3px rgba(140, 111, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(140,111,255,0.2);
 }
-
 .api-status {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-
   font-weight: 600;
 }
-
 .api-status .dot {
   width: 8px;
   height: 8px;
-
   border-radius: 50%;
-
   background: var(--text-faint);
-
   display: inline-block;
 }
-
-.api-status.ok .dot {
-  background: var(--mint);
-
-  box-shadow:
-    0 0 8px rgba(0, 230, 195, 0.6);
-}
-
-.api-status.bad .dot {
-  background: var(--coral);
-
-  box-shadow:
-    0 0 8px rgba(255, 77, 137, 0.6);
-}
-
-
-/* ============================================================
-   SECTION TITLE
-   ============================================================ */
+.api-status.ok .dot { background: var(--mint); box-shadow: 0 0 8px rgba(0,230,195,0.6); }
+.api-status.bad .dot { background: var(--coral); box-shadow: 0 0 8px rgba(255,77,137,0.6); }
 
 .section-title {
   font-weight: 700;
   color: var(--text);
-
   font-family: var(--display);
 }
 
-.hidden {
-  display: none !important;
-}
-
+.hidden { display: none !important; }
 
 /* ============================================================
-   FORM CONTROLS
+   Form controls (Bootstrap inputs / labels)
    ============================================================ */
-
 .form-label {
   color: var(--text-muted);
-
   font-size: 13px;
   font-weight: 500;
 }
-
 .form-control {
   background: var(--surface-2);
   border: 1px solid var(--border);
-
   color: var(--text);
 }
-
-.form-control::placeholder {
-  color: var(--text-faint);
-}
-
+.form-control::placeholder { color: var(--text-faint); }
 .form-control:focus {
   background: var(--surface-2);
   border-color: var(--sky-deep);
-
   color: var(--text);
-
-  box-shadow:
-    0 0 0 3px rgba(140, 111, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(140,111,255,0.2);
 }
 
-.text-muted {
-  color: var(--text-faint) !important;
-}
-
-.text-light {
-  color: var(--text) !important;
-}
-
+.text-muted { color: var(--text-faint) !important; }
+.text-light { color: var(--text) !important; }
 
 /* ============================================================
-   ALERTS
+   Alerts (flash messages)
    ============================================================ */
-
 .alert {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
-
   font-size: 13.5px;
 }
-
 .alert-warning {
-  background: rgba(255, 176, 32, 0.12);
-
+  background: rgba(255,176,32,0.12);
   color: #FFD98A;
-  border-color: rgba(255, 176, 32, 0.35);
+  border-color: rgba(255,176,32,0.35);
 }
-
 .alert-danger {
-  background: rgba(255, 77, 137, 0.12);
-
+  background: rgba(255,77,137,0.12);
   color: #FF9FBD;
-  border-color: rgba(255, 77, 137, 0.35);
+  border-color: rgba(255,77,137,0.35);
 }
-
 .alert-success {
   background: var(--mint-dim);
-
   color: var(--mint);
   border-color: var(--border-strong);
 }
-
 .alert-info {
   background: var(--sky-dim);
-
   color: #C7BAFF;
-  border-color: rgba(140, 111, 255, 0.35);
+  border-color: rgba(140,111,255,0.35);
 }
-
 
 /* ============================================================
-   LOGIN PAGE
+   Login page specifics
    ============================================================ */
-
-body.p-4 {
-  padding: 32px !important;
-}
+body.p-4 { padding: 32px !important; }
 
 .row.justify-content-center .glass {
   margin-top: 6vh;
-
   position: relative;
   overflow: hidden;
 }
-
 .row.justify-content-center .glass::before {
   content: "";
-
   position: absolute;
   inset: -40px;
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(0, 230, 195, 0.14),
-      transparent 65%
-    );
-
+  background: radial-gradient(circle at 50% 0%, rgba(0,230,195,0.14), transparent 65%);
   pointer-events: none;
 }
 
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-@media (max-width: 1200px) {
-
-  .glass:has(.table-wrap),
-  .container .glass:has(.table-wrap),
-  .container-fluid .glass:has(.table-wrap) {
-    width: calc(100vw - 32px);
-  }
-
-}
-
-
 @media (max-width: 900px) {
-
-  body.p-4 {
-    padding: 16px !important;
-  }
-
-  .glass:has(.table-wrap),
-  .container .glass:has(.table-wrap),
-  .container-fluid .glass:has(.table-wrap) {
-    width: 100%;
-    margin-right: 0;
-  }
-
-}
-
-
-@media (max-width: 600px) {
-
-  .glass {
-    padding: 14px;
-  }
-
-  .glass:has(.table-wrap) {
-    border-radius: 10px;
-  }
-
-  .table-wrap {
-    max-height: 60vh;
-  }
-
-  table.table-striped {
-    font-size: 0.78rem;
-  }
-
-}
-
-/* ============================================================
-   FULL-WIDTH DATA PANELS
-   Dataset Preview + Predictions
-   ============================================================ */
-
-/*
-   The dashboard uses:
-
-   .container
-      .row
-         .col-md-7
-            .data-panel
-
-   These panels keep their current LEFT position but extend
-   all the way to the browser's RIGHT edge.
-*/
-
-.data-panel {
-  width: calc(100vw - 40px);
-  max-width: none;
-  box-sizing: border-box;
-
-  position: relative;
-  z-index: 1;
-}
-
-/* Make the table occupy the complete panel width */
-.data-panel .table-wrap {
-  width: 100%;
-  max-width: none;
-
-  overflow-x: auto;
-  overflow-y: auto;
-
-  box-sizing: border-box;
-}
-
-/* Allow wide datasets to scroll horizontally */
-.data-panel table {
-  width: max-content;
-  min-width: 100%;
-}
-
-
-/* ============================================================
-   DESKTOP — BOOTSTRAP CONTAINER BREAKOUT
-   ============================================================ */
-
-@media (min-width: 1400px) {
-
-  /*
-     Bootstrap .container = 1320px
-
-     The panel is inside col-md-7, which starts after
-     5/12 of the container.
-
-     This calculates the exact remaining width from the
-     panel's current left position to the viewport edge.
-  */
-
-  .data-panel {
-    width: calc(
-      100vw
-      - ((100vw - 1320px) / 2)
-      - 550px
-    );
-  }
-}
-
-
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-
-  /*
-     Bootstrap .container = 1140px
-  */
-
-  .data-panel {
-    width: calc(
-      100vw
-      - ((100vw - 1140px) / 2)
-      - 475px
-    );
-  }
-}
-
-
-@media (min-width: 992px) and (max-width: 1199.98px) {
-
-  /*
-     Bootstrap .container = 960px
-  */
-
-  .data-panel {
-    width: calc(
-      100vw
-      - ((100vw - 960px) / 2)
-      - 400px
-    );
-  }
-}
-
-
-/* ============================================================
-   TABLE SCROLLBAR
-   ============================================================ */
-
-.data-panel .table-wrap::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-.data-panel .table-wrap::-webkit-scrollbar-track {
-  background: var(--bg-elevated);
-  border-radius: 10px;
-}
-
-.data-panel .table-wrap::-webkit-scrollbar-thumb {
-  background: var(--text-faint);
-  border-radius: 10px;
-  border: 2px solid var(--bg-elevated);
-}
-
-.data-panel .table-wrap::-webkit-scrollbar-thumb:hover {
-  background: var(--mint);
-}
-
-
-/* ============================================================
-   TABLE CELLS
-   Prevent headers from wrapping
-   ============================================================ */
-
-.data-panel table th,
-.data-panel table td {
-  white-space: nowrap;
-}
-
-
-/* ============================================================
-   TABLE HEADER
-   ============================================================ */
-
-.data-panel table thead th {
-  white-space: nowrap;
-}
-
-
-/* ============================================================
-   TABLET / MOBILE
-   ============================================================ */
-
-@media (max-width: 991.98px) {
-
-  /*
-     At smaller widths the Bootstrap columns stack,
-     so there is no need for a breakout.
-  */
-
-  .data-panel {
-    width: 100%;
-    max-width: 100%;
-    margin-right: 0;
-  }
-
-}
-
-
-/* ============================================================
-   SMALL MOBILE
-   ============================================================ */
-
-@media (max-width: 576px) {
-
-  .data-panel {
-    padding: 12px !important;
-    border-radius: 10px;
-  }
-
-  .data-panel .table-wrap {
-    max-height: 60vh;
-  }
-
-  .data-panel table {
-    font-size: 0.78rem;
-  }
-
+  body.p-4 { padding: 16px !important; }
 }
