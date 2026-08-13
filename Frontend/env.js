@@ -2,4 +2,4 @@
 // at the deployed backend. Left blank for local development; config.js
 // falls back to http://127.0.0.1:5000 or a manually-entered API URL when
 // this is empty.
-window.DEFAULT_API_BASE_URL = "";
+window.DEFAULT_API_BASE_URL = "https://network-anomaly-detection-using-ml.onrender.com";
