@@ -16,14 +16,29 @@ function escapeHtml(str) {
 }
 
 async function refreshApiStatus() {
+  const el = document.getElementById("apiStatus");
+  const text = document.getElementById("apiStatusText");
   try {
     await Api.health();
+    el.className = "api-status ok";
+    text.textContent = "backend reachable";
   } catch (e) {
-    /* backend unreachable — nothing to update in the UI */
+    el.className = "api-status bad";
+    text.textContent = "backend unreachable";
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const apiInput = document.getElementById("apiUrlInput");
+  apiInput.value = getApiBase();
+
+  document.getElementById("apiUrlSave").addEventListener("click", () => {
+    if (apiInput.value.trim()) {
+      setApiBase(apiInput.value.trim());
+      refreshApiStatus();
+    }
+  });
+
   refreshApiStatus();
 
   // Already logged in? Skip straight to the dashboard.

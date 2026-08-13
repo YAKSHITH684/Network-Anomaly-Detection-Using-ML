@@ -1,6 +1,16 @@
+# render.yaml — Blueprint for deploying the backend (Flask API) and the
+# frontend (static HTML/CSS/JS) as two separate Render services from one repo.
+#
+# In the Render dashboard: New + -> Blueprint -> connect this repo -> Apply.
+# Render will create both services below and wire the frontend to the
+# backend's live URL automatically (via the BACKEND_HOST env var + build
+# step). No manual "Backend API" box entry needed after a Blueprint deploy.
+
+services:
   - type: web
     name: anomaly-detection-backend
     runtime: python
+    plan: free
     rootDir: Backend
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT
@@ -12,3 +22,28 @@
         generateValue: true
       - key: CORS_ORIGINS
         value: "*"
+
+  - type: web
+    name: anomaly-detection-frontend
+    runtime: static
+    plan: free
+    rootDir: Frontend
+    # Writes the backend's live onrender.com URL into env.js at build time,
+    # so config.js picks it up as window.DEFAULT_API_BASE_URL with no
+    # manual step. BACKEND_HOST is auto-populated below via fromService.
+    buildCommand: >-
+      echo "window.DEFAULT_API_BASE_URL = 'https://$BACKEND_HOST';" > env.js
+    staticPublishPath: .
+    envVars:
+      - key: BACKEND_HOST
+        fromService:
+          type: web
+          name: anomaly-detection-backend
+          property: host
+    routes:
+      - type: rewrite
+        source: /dashboard
+        destination: /dashboard.html
+      - type: rewrite
+        source: /
+        destination: /index.html
