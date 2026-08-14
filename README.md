@@ -1,117 +1,306 @@
-# Anomaly Detection in Network Traffic — Frontend/Backend Split
+# 🚨 Network Anomaly Detection Using Machine Learning
 
-Originally a single Flask app that server-rendered HTML. Now split into:
+A Machine Learning-based web application designed to detect unusual network traffic and identify potential cybersecurity threats.
 
-- **`backend/`** — a Flask JSON API only (no templates). Trains/evaluates six
-  ML classifiers (Naive Bayes, Logistic Regression, SVM, Random Forest,
-  XGBoost, LightGBM) on network traffic data and exposes everything over
-  `/api/...` endpoints.
-- **`frontend/`** — plain HTML/CSS/JS (no framework, no build step) that
-  calls the backend over `fetch()`. Can be hosted anywhere that serves
-  static files.
+The project analyzes network traffic data and uses multiple Machine Learning algorithms to classify traffic as normal or anomalous. It also provides a web-based dashboard for interacting with the trained models and viewing predictions.
 
-They talk to each other over HTTP with a bearer token (returned at login),
-not cookies — this avoids cross-origin cookie headaches when frontend and
-backend live on two different domains (e.g. two separate Render services).
+## 🌐 Live Demo
 
-## Run it locally
+🔗 **Live Application:**  
+https://network-anomaly-detection-using-ml-1.onrender.com/
 
-**Backend:**
+### Demo Login
+
+```text
+Username: admin
+Password: admin123
+```
+
+The application provides a Network Traffic Analysis dashboard for analyzing network activity.
+
+## 📌 Project Overview
+
+Network traffic contains a large amount of information that can be used to identify suspicious or abnormal behavior.
+
+This project implements a Machine Learning pipeline that:
+
+- Processes network traffic datasets
+- Performs data preprocessing
+- Trains multiple Machine Learning models
+- Compares model performance
+- Detects anomalous network traffic
+- Generates predictions
+- Provides an interactive web dashboard
+- Helps identify potential cybersecurity threats
+
+## 🎯 Objectives
+
+- Detect abnormal network traffic automatically
+- Apply Machine Learning techniques to cybersecurity
+- Compare different classification algorithms
+- Identify the best-performing model
+- Build a user-friendly anomaly detection dashboard
+- Deploy the application as a web-based solution
+
+## 🤖 Machine Learning Models
+
+The project evaluates multiple Machine Learning algorithms:
+
+- Naive Bayes
+- Logistic Regression
+- Support Vector Machine (SVM)
+- Random Forest
+- XGBoost
+- LightGBM
+
+These models are trained and evaluated to determine their effectiveness for network anomaly detection.
+
+## 🔄 Machine Learning Workflow
+
+```
+Network Traffic Dataset
+        ↓
+Data Preprocessing
+        ↓
+Data Cleaning
+        ↓
+Feature Selection
+        ↓
+Feature Encoding / Scaling
+        ↓
+Train-Test Split
+        ↓
+Machine Learning Models
+        ↓
+Model Evaluation
+        ↓
+Best Model Selection
+        ↓
+Anomaly Prediction
+        ↓
+Web Dashboard
+```
+
+## 📊 Model Evaluation
+
+The models are compared using performance metrics such as:
+
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+- Confusion Matrix
+
+Comparative visualizations are used to understand the performance of each algorithm.
+
+## 🖥️ Application Features
+
+### 🔐 Authentication
+The application provides a login interface before accessing the anomaly detection dashboard.
+
+### 🌐 Network Traffic Analysis
+Users can analyze network traffic and generate predictions using the trained Machine Learning model.
+
+### 🤖 ML-Based Prediction
+The system processes network traffic features and predicts whether the traffic is normal or anomalous.
+
+### 📈 Model Comparison
+Different Machine Learning algorithms can be evaluated and compared based on their performance.
+
+### 📊 Data Visualization
+Charts and visualizations help understand model performance and network traffic behavior.
+
+### ☁️ Deployment
+The application is deployed online using Render.
+
+## 🛠️ Technologies Used
+
+**Programming**
+- Python
+
+**Machine Learning**
+- Scikit-learn
+- XGBoost
+- LightGBM
+- NumPy
+- Pandas
+
+**Data Visualization**
+- Matplotlib
+- Seaborn
+
+**Web Development**
+- Flask
+- HTML
+- CSS
+- JavaScript
+
+**Deployment**
+- Render
+
+**Development Tools**
+- Jupyter Notebook
+- VS Code
+- Git
+- GitHub
+
+## 📁 Project Structure
+
+```
+Network-Anomaly-Detection-Using-ML/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+├── models/
+│   ├── model.pkl
+│   └── ...
+│
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── templates/
+│   ├── index.html
+│   ├── login.html
+│   └── dashboard.html
+│
+├── data/
+│   └── dataset.csv
+│
+└── notebooks/
+    └── anomaly_detection.ipynb
+```
+
+The exact folder structure may vary depending on the final version of the project.
+
+## ⚙️ Installation
+
+### 1. Clone the Repository
 ```bash
-cd backend
-python -m venv venv && source venv/bin/activate   # optional but recommended
+git clone https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML.git
+```
+
+### 2. Navigate to the Project
+```bash
+cd Network-Anomaly-Detection-Using-ML
+```
+
+### 3. Create a Virtual Environment
+```bash
+python -m venv venv
+```
+
+### 4. Activate the Virtual Environment
+
+**Windows**
+```bash
+venv\Scripts\activate
+```
+
+**Linux / macOS**
+```bash
+source venv/bin/activate
+```
+
+### 5. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
+
+### 6. Run the Application
+```bash
 python app.py
 ```
-Runs on `http://127.0.0.1:5000`. Health check: `curl http://127.0.0.1:5000/api/health`.
 
-**Frontend:**
-```bash
-cd frontend
-python -m http.server 8000
+The application will be available at:
 ```
-Open `http://127.0.0.1:8000`. The page defaults to talking to
-`http://127.0.0.1:5000` automatically (see `js/config.js`) — no extra
-config needed for local use.
+http://127.0.0.1:5000/
+```
 
-Login with `admin` / `admin123`, upload `backend/dataset/train.csv` (or your
-own CSV with an `attack_type` label column), click **Preprocess & Split**,
-train a model or two, then **Show Accuracy Graphs** or **Predict** on
-`backend/dataset/test.csv`.
+## 🔍 How It Works
 
-## Deploy to Render
+**Step 1 — Data Collection**
+Network traffic data is collected from a suitable network intrusion/anomaly detection dataset.
 
-This repo includes a `render.yaml` Blueprint that deploys **both** services
-in one shot:
+**Step 2 — Data Preprocessing**
+The dataset is cleaned and prepared for Machine Learning. This includes:
+- Handling missing values
+- Encoding categorical features
+- Feature scaling
+- Removing unnecessary columns
+- Preparing target labels
 
-1. Push this repo to GitHub/GitLab.
-2. In the Render dashboard: **New +** → **Blueprint** → connect the repo.
-3. Render provisions two services:
-   - `anomaly-detection-backend` (Python web service, free plan)
-   - `anomaly-detection-frontend` (static site, free plan)
-4. Click **Apply**. First backend deploy takes a few minutes (installs
-   pandas/scikit-learn/xgboost/lightgbm/matplotlib etc.).
-5. The frontend's build step automatically writes the backend's live URL
-   into `env.js`, so once both are up the frontend already knows where to
-   send API calls — just open the frontend's `.onrender.com` URL.
+**Step 3 — Model Training**
+Multiple Machine Learning algorithms are trained using the processed dataset.
 
-**If the frontend can't reach the backend** (e.g. you deployed them
-separately, not via the Blueprint): open the frontend site, paste the
-backend's URL (`https://anomaly-detection-backend.onrender.com`, no
-trailing slash) into the **"Backend API"** box at the top of the page, and
-click **Save**. It's remembered in the browser via `localStorage`. You can
-also pass it as a URL param once: `?api=https://your-backend.onrender.com`.
+**Step 4 — Model Evaluation**
+The trained models are evaluated using standard classification metrics.
 
-### Manual deploy (without the Blueprint)
+**Step 5 — Prediction**
+The selected model receives network traffic features and determines whether the traffic is:
+- Normal Traffic
 
-**Backend** — New + → Web Service → connect repo → set **Root Directory**
-to `backend`:
-- Build command: `pip install -r requirements.txt`
-- Start command: `gunicorn app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT`
-- Env var: `SECRET_KEY` = any random string
+or
 
-**Frontend** — New + → Static Site → connect repo → set **Root Directory**
-to `frontend`:
-- Build command: (leave blank, or `echo "window.DEFAULT_API_BASE_URL = '';" > env.js`)
-- Publish directory: `.`
-- After deploy, set the backend URL via the in-page "Backend API" box as
-  described above.
+- Anomalous / Suspicious Traffic
 
-### Important notes about this app's design (carried over from the original)
+**Step 6 — Dashboard**
+The prediction results are presented through the web interface.
 
-- **State is in-memory, not per-user/per-database.** The uploaded dataset
-  and train/test split (`DATA_STORE` in `backend/app.py`) live in a single
-  global Python object shared by all users — fine for a single-user demo,
-  but **don't scale the backend to multiple Gunicorn workers/dynos**, each
-  worker has its own memory. The provided `Procfile`/`render.yaml`
-  intentionally use `--workers 1 --threads 4`.
-- Per-user state that *is* isolated: which models each logged-in user has
-  trained and their accuracies (`model_metrics`), keyed by that user's
-  bearer token.
-- **Storage is ephemeral on Render's free tier.** Uploaded CSVs and trained
-  `.joblib` models are written to local disk and wiped on redeploy/restart.
-  For persistence you'd need a persistent disk (paid plan) or external
-  storage (e.g. S3).
-- **XGBoost/LightGBM are optional.** If unavailable, those two "train"
-  buttons stay disabled and everything else still works.
-- **CORS** defaults to `*` (any origin) since auth is a bearer token, not
-  cookies, so there's no credentialed-CORS risk. Set the backend's
-  `CORS_ORIGINS` env var to your frontend's exact URL if you want to lock
-  it down.
+## 🔐 Cybersecurity Applications
 
-## API reference (backend)
+This project can be used as a foundation for:
 
-| Method | Path                              | Auth | Notes |
-|---|---|---|---|
-| GET  | `/api/health`                     | no  | liveness check |
-| POST | `/api/auth/login`                 | no  | `{username, password}` → `{token}` |
-| POST | `/api/auth/logout`                | yes | invalidates the token |
-| GET  | `/api/state`                      | yes | logs, dataset preview, trained-model metrics |
-| POST | `/api/dataset/upload`             | yes | multipart `file` (CSV) |
-| POST | `/api/dataset/preprocess`         | yes | clean, encode, scale, split, (SMOTE if available) |
-| POST | `/api/models/train/<model_name>`  | yes | `naive_bayes`, `logistic`, `svm`, `random_forest`, `xgboost`, `lightgbm` |
-| GET  | `/api/models/graphs`              | yes | base64 PNG accuracy bar + pie charts |
-| GET  | `/api/models/confusion/<model>`   | yes | base64 PNG confusion matrix |
-| POST | `/api/predict`                    | yes | multipart `file` (CSV), uses best-accuracy trained model |
+- Intrusion Detection Systems
+- Network Monitoring
+- Cyber Threat Detection
+- Suspicious Traffic Identification
+- Security Analytics
+- Network Security Research
 
-All authenticated routes expect `Authorization: Bearer <token>`.
+## 🚀 Future Improvements
+
+Possible improvements include:
+
+- Real-time network traffic monitoring
+- Deep Learning-based anomaly detection
+- Real-time alert notifications
+- Advanced dashboard analytics
+- Automated threat classification
+- Integration with SIEM platforms
+- Cloud-based monitoring
+- Streaming network traffic analysis
+- Explainable AI for security predictions
+
+## 📈 Key Learning Outcomes
+
+Through this project, I gained practical experience in:
+
+- Machine Learning
+- Classification Algorithms
+- Network Security
+- Data Preprocessing
+- Feature Engineering
+- Model Evaluation
+- Python Development
+- Flask Web Development
+- Data Visualization
+- Model Deployment
+- Git and GitHub
+
+## 👨‍💻 Author
+
+**Yakshith Anandapu**
+
+B.Tech — Computer Science and Engineering
+
+**Connect With Me**
+- GitHub: https://github.com/YAKSHITH684
+- LinkedIn: https://www.linkedin.com/in/anandapu-yakshith684/
+
+## ⭐ Project
+
+If you find this project useful, consider giving the repository a ⭐ on GitHub.
