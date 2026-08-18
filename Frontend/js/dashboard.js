@@ -115,19 +115,6 @@ function renderModelButtons(state) {
   }
 }
 
-async function refreshApiStatus() {
-  const el = document.getElementById("apiStatus");
-  const text = document.getElementById("apiStatusText");
-  try {
-    await Api.health();
-    el.className = "api-status ok";
-    text.textContent = "backend reachable";
-  } catch (e) {
-    el.className = "api-status bad";
-    text.textContent = "backend unreachable";
-  }
-}
-
 async function loadState() {
   try {
     const state = await Api.state();
@@ -285,17 +272,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "index.html";
     return;
   }
-
-  const apiInput = document.getElementById("apiUrlInput");
-  apiInput.value = getApiBase();
-  document.getElementById("apiUrlSave").addEventListener("click", () => {
-    if (apiInput.value.trim()) {
-      setApiBase(apiInput.value.trim());
-      refreshApiStatus();
-      loadState();
-    }
-  });
-  refreshApiStatus();
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     try { await Api.logout(); } catch (e) { /* ignore */ }

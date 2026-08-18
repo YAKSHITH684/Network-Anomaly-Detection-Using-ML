@@ -15,37 +15,24 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-async function refreshApiStatus() {
-  const el = document.getElementById("apiStatus");
-  const text = document.getElementById("apiStatusText");
+async function checkBackendOnce() {
+  // Silent background check — only surfaces a message if the backend
+  // is actually unreachable, instead of a permanent status bar.
   try {
     await Api.health();
-    el.className = "api-status ok";
-    text.textContent = "backend reachable";
   } catch (e) {
-    el.className = "api-status bad";
-    text.textContent = "backend unreachable";
+    showFlash("Backend is waking up or unreachable — this can take up to a minute on first load.", "warning");
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const apiInput = document.getElementById("apiUrlInput");
-  apiInput.value = getApiBase();
-
-  document.getElementById("apiUrlSave").addEventListener("click", () => {
-    if (apiInput.value.trim()) {
-      setApiBase(apiInput.value.trim());
-      refreshApiStatus();
-    }
-  });
-
-  refreshApiStatus();
-
   // Already logged in? Skip straight to the dashboard.
   if (getToken()) {
     window.location.href = "dashboard.html";
     return;
   }
+
+  checkBackendOnce();
 
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
