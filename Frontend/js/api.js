@@ -68,5 +68,12 @@ const Api = (() => {
       fd.append("file", file);
       return request("/api/predict", { method: "POST", body: fd });
     },
+
+    chat: (message, history) =>
+      request("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, history }),
+      }),
   };
 })();

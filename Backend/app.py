@@ -39,6 +39,13 @@ from sklearn.ensemble import RandomForestClassifier
 
 import joblib
 
+# Optional Groq-powered chat assistant
+try:
+    from groq import Groq
+    HAS_GROQ = True
+except Exception:
+    HAS_GROQ = False
+
 # Optional models
 try:
     import xgboost as xgb
@@ -65,6 +72,14 @@ except Exception:
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "super-secret-key")
+
+# Chat assistant — reads GROQ_API_KEY from the environment. Never
+# hardcode a key here; set it in Render's dashboard under Environment.
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+CHAT_MODEL = os.environ.get("GROQ_CHAT_MODEL", "openai/gpt-oss-120b")
+_groq_client = None
+if HAS_GROQ and GROQ_API_KEY:
+    _groq_client = Groq(api_key=GROQ_API_KEY)
 
 # Comma-separated list of allowed origins, or "*" for any (default).
 # Set this to your deployed frontend URL(s) on Render for tighter CORS.
@@ -110,6 +125,7 @@ DATA_STORE = {
     "scaler": None,
     "feature_columns": None,
     "target_encoder": None,
+    "last_prediction": None,  # summary dict for the chat assistant, see predict()
 }
 
 LOGS = []
@@ -296,6 +312,7 @@ def state():
         "has_lightgbm": HAS_LGB,
         "has_smote": HAS_SMOTE,
         "has_split": DATA_STORE["X_train"] is not None,
+        "has_chat": bool(_groq_client),
     })
 
 
@@ -530,6 +547,13 @@ def predict():
 
         add_log(f"Prediction OK using {best_model}. (rows: {len(preds)})")
 
+        label_counts = pd.Series(pred_labels).value_counts().to_dict()
+        DATA_STORE["last_prediction"] = {
+            "model_name": best_model,
+            "row_count": int(len(preds)),
+            "label_counts": {str(k): int(v) for k, v in label_counts.items()},
+        }
+
         preview = df_preview(out_df, n=200)
         return jsonify({
             "ok": True,
@@ -543,6 +567,117 @@ def predict():
         add_log("Prediction Error: " + str(e))
         add_log(traceback.format_exc())
         return jsonify({"error": f"Prediction failed: {e}"}), 400
+
+
+# --------------------------------------------------------------------------
+# Chat assistant
+# --------------------------------------------------------------------------
+
+CHAT_SYSTEM_PROMPT = """You are the built-in security assistant for a network traffic \
+anomaly detection dashboard. You help the analyst using the app understand their \
+dataset, their trained models, and their most recent predictions.
+
+Ground every answer in the CURRENT APP STATE block you're given — don't invent \
+numbers, column names, or attack types that aren't in it. If the state doesn't have \
+what's needed to answer (e.g. no model trained yet, no predictions run yet), say so \
+plainly and tell the analyst what step to run first (upload a dataset, preprocess, \
+train a model, or run a prediction).
+
+Keep answers concise and analyst-facing: short paragraphs or a few bullet points, \
+not long reports. When asked "why was this flagged" or similar, reason about which \
+detected attack types are present and what that typically indicates, and suggest a \
+concrete next step (e.g. investigate the source, rate-limit, isolate the host) — \
+but be clear when you're giving general security guidance rather than reading it \
+directly off the data."""
+
+
+def build_chat_context(sess):
+    """Compact, factual summary of current app state for the chat assistant."""
+    lines = []
+
+    df = DATA_STORE["df"]
+    if df is not None:
+        lines.append(f"Dataset uploaded: shape {df.shape[0]} rows x {df.shape[1]} columns.")
+        lines.append(f"Columns: {', '.join(str(c) for c in df.columns)}")
+    else:
+        lines.append("No dataset has been uploaded yet.")
+
+    lines.append(f"Preprocessed / split into train-test: {DATA_STORE['X_train'] is not None}.")
+
+    model_metrics = sess.get("model_metrics") or {}
+    if model_metrics:
+        lines.append("Trained models this session:")
+        for name, m in model_metrics.items():
+            lines.append(f"  - {name}: accuracy {m['accuracy']:.4f}")
+    else:
+        lines.append("No models trained yet this session.")
+
+    last_pred = DATA_STORE.get("last_prediction")
+    if last_pred:
+        lines.append(
+            f"Most recent prediction run: model={last_pred['model_name']}, "
+            f"rows={last_pred['row_count']}, label counts={last_pred['label_counts']}."
+        )
+    else:
+        lines.append("No prediction has been run yet.")
+
+    if LOGS:
+        lines.append("Recent app log lines (most recent first):")
+        lines.extend(f"  - {l}" for l in LOGS[:8])
+
+    return "\n".join(lines)
+
+
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    token, sess = require_auth()
+    if not token:
+        return auth_error()
+
+    if not HAS_GROQ:
+        return jsonify({"error": "The 'groq' package is not installed on the server."}), 503
+    if not _groq_client:
+        return jsonify({"error": "Chat assistant is not configured. Set GROQ_API_KEY on the server."}), 503
+
+    data = request.get_json(silent=True) or {}
+    message = str(data.get("message", "")).strip()
+    history = data.get("history") or []  # [{role: "user"|"assistant", content: str}, ...]
+
+    if not message:
+        return jsonify({"error": "Message is required."}), 400
+    if len(message) > 2000:
+        return jsonify({"error": "Message is too long (max 2000 characters)."}), 400
+
+    # Keep the request bounded: only the last few turns, and only well-formed ones.
+    clean_history = []
+    for turn in history[-10:]:
+        role = turn.get("role")
+        content = str(turn.get("content", "")).strip()
+        if role in ("user", "assistant") and content:
+            clean_history.append({"role": role, "content": content[:2000]})
+
+    context_block = build_chat_context(sess)
+    system_prompt = f"{CHAT_SYSTEM_PROMPT}\n\nCURRENT APP STATE:\n{context_block}"
+
+    # Groq's API is OpenAI-style: the system prompt is just the first
+    # message in the array, not a separate top-level parameter.
+    messages = [{"role": "system", "content": system_prompt}] + clean_history + [
+        {"role": "user", "content": message}
+    ]
+
+    try:
+        resp = _groq_client.chat.completions.create(
+            model=CHAT_MODEL,
+            max_tokens=600,
+            messages=messages,
+        )
+        reply_text = (resp.choices[0].message.content or "").strip()
+        return jsonify({"ok": True, "reply": reply_text})
+
+    except Exception as e:
+        add_log("Chat Error: " + str(e))
+        add_log(traceback.format_exc())
+        return jsonify({"error": f"Chat assistant failed: {e}"}), 502
 
 
 # --------------------------------------------------------------------------
