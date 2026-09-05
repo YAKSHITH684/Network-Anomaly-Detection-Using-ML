@@ -1,33 +1,34 @@
 /* ============================================================
-   Anomaly Detection Dashboard — IntervuX-matched dark theme
-   (mint / sky HUD aesthetic — same tokens as the marketing site)
+   Anomaly Detection Dashboard — dark security / SOC theme
+   Deep-space navy base, terminal-cyan primary signal, sharp
+   HUD corner-bracket framing, mono readouts for data.
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg:            #F3F6FB;
-  --bg-elevated:   #FFFFFF;
-  --surface:       #EAEFF8;
-  --surface-2:     #DCE4F2;
-  --border:        rgba(13,27,54,0.09);
-  --border-strong: rgba(13,27,54,0.17);
+  --bg:            #05080D;
+  --bg-elevated:   #0C121C;
+  --surface:       #111928;
+  --surface-2:     #182335;
+  --border:        rgba(0,230,184,0.10);
+  --border-strong: rgba(0,230,184,0.24);
 
-  --text:          #0E1726;
-  --text-muted:    #5B6B84;
-  --text-faint:    #96A3B8;
+  --text:          #E8EFF6;
+  --text-muted:    #8FA1B8;
+  --text-faint:    #4C5A70;
 
-  --mint:          #00A98F;
-  --mint-deep:     #00806D;
-  --mint-dim:      rgba(0,169,143,0.12);
-  --sky:           #6A4CF0;
-  --sky-deep:      #5236C9;
-  --sky-dim:       rgba(106,76,240,0.12);
-  --coral:         #E23B76;
-  --coral-deep:    #B01F58;
-  --coral-dim:     rgba(226,59,118,0.12);
-  --amber:         #C97A00;
-  --amber-dim:     rgba(201,122,0,0.12);
+  --mint:          #00E6B8;
+  --mint-deep:     #00B894;
+  --mint-dim:      rgba(0,230,184,0.14);
+  --sky:           #8C9BFF;
+  --sky-deep:      #6E7EFA;
+  --sky-dim:       rgba(140,155,255,0.14);
+  --coral:         #FF5C7C;
+  --coral-deep:    #FF3358;
+  --coral-dim:     rgba(255,92,124,0.14);
+  --amber:         #FFB020;
+  --amber-dim:     rgba(255,176,32,0.14);
 
   /* legacy variable names kept so nothing relying on them breaks */
   --accent: var(--sky);
@@ -41,8 +42,8 @@
   --body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --mono:    'JetBrains Mono', 'Courier New', monospace;
 
-  --radius: 14px;
-  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-sm: 7px;
 }
 
 * { box-sizing: border-box; }
@@ -51,10 +52,11 @@ body {
   min-height: 100vh;
   font-family: var(--body);
   background:
-    radial-gradient(ellipse 900px 500px at 18% -5%, rgba(0,169,143,0.12), transparent 60%),
-    radial-gradient(ellipse 700px 500px at 100% 20%, rgba(106,76,240,0.12), transparent 60%),
-    repeating-linear-gradient(0deg, rgba(13,27,54,0.018) 0px, rgba(13,27,54,0.018) 1px, transparent 1px, transparent 42px),
-    repeating-linear-gradient(90deg, rgba(13,27,54,0.018) 0px, rgba(13,27,54,0.018) 1px, transparent 1px, transparent 42px),
+    radial-gradient(ellipse 900px 500px at 18% -8%, rgba(0,230,184,0.16), transparent 60%),
+    radial-gradient(ellipse 800px 600px at 105% 15%, rgba(140,155,255,0.13), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(0,230,184,0.035) 0px, rgba(0,230,184,0.035) 1px, transparent 1px, transparent 42px),
+    repeating-linear-gradient(90deg, rgba(0,230,184,0.035) 0px, rgba(0,230,184,0.035) 1px, transparent 1px, transparent 42px),
+    radial-gradient(ellipse 1400px 900px at 50% 30%, transparent 55%, rgba(0,0,0,0.45) 100%),
     var(--bg);
   background-attachment: fixed;
   color: var(--text);
@@ -66,7 +68,7 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.01em;
 }
 
-::selection { background: var(--mint); color: #fff; }
+::selection { background: var(--mint); color: #04120E; }
 
 /* ============================================================
    Glass panels
@@ -76,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   padding: 20px;
-  box-shadow: 0 20px 44px rgba(13,27,54,0.10);
+  box-shadow: 0 20px 44px rgba(0,0,0,0.45);
   backdrop-filter: blur(10px);
 }
 
@@ -98,10 +100,11 @@ h2.animated-title {
 }
 
 /* ============================================================
-   Log panel — mission-control readout, mirrors the transcript
-   card on the marketing site
+   Log panel — mission-control readout with a faint CRT scanline
+   texture, framed like the login card's targeting corners
    ============================================================ */
 .log-panel {
+  position: relative;
   height: 60vh;
   overflow: auto;
   background: var(--bg-elevated);
@@ -110,7 +113,23 @@ h2.animated-title {
   border-radius: var(--radius);
   border: 1px solid var(--border-strong);
   font-size: 0.85rem;
-  box-shadow: 0 20px 44px rgba(13,27,54,0.10), 0 0 30px rgba(0,169,143,0.05);
+  box-shadow: 0 20px 44px rgba(0,0,0,0.45), 0 0 40px rgba(0,230,184,0.06);
+}
+
+.log-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--radius);
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.012) 0px,
+    rgba(255,255,255,0.012) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: screen;
 }
 
 .log-panel h5 {
@@ -129,7 +148,7 @@ h2.animated-title {
   white-space: pre-wrap;
   margin-bottom: 8px;
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
   border-left: 3px solid var(--mint);
   color: var(--text-muted);
@@ -137,7 +156,7 @@ h2.animated-title {
 
 .log-line.err {
   border-left-color: var(--coral);
-  color: var(--coral-deep);
+  color: var(--coral);
   background: var(--coral-dim);
 }
 
@@ -153,21 +172,21 @@ h2.animated-title {
 }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
-.btn:focus { box-shadow: 0 0 0 3px rgba(140,111,255,0.35) !important; }
+.btn:focus { box-shadow: 0 0 0 3px rgba(140,155,255,0.35) !important; }
 
 .btn-primary {
   background: var(--sky);
   color: #0A0620;
-  box-shadow: 0 0 0 1px rgba(140,111,255,0.4), 0 8px 22px rgba(140,111,255,0.25);
+  box-shadow: 0 0 0 1px rgba(140,155,255,0.4), 0 8px 22px rgba(140,155,255,0.25);
 }
-.btn-primary:hover, .btn-primary:focus { background: #9F86FF; color: #0A0620; }
+.btn-primary:hover, .btn-primary:focus { background: #A9B4FF; color: #0A0620; }
 
 .btn-success {
   background: var(--mint);
   color: #04120E;
-  box-shadow: 0 0 0 1px rgba(0,230,195,0.4), 0 8px 22px rgba(0,230,195,0.28);
+  box-shadow: 0 0 0 1px rgba(0,230,184,0.4), 0 8px 22px rgba(0,230,184,0.28);
 }
-.btn-success:hover, .btn-success:focus { background: #1FF2D2; color: #04120E; }
+.btn-success:hover, .btn-success:focus { background: #3CFFD6; color: #04120E; }
 
 .btn-warning {
   background: var(--amber);
@@ -179,16 +198,16 @@ h2.animated-title {
 .btn-info {
   background: var(--sky-dim);
   color: var(--sky);
-  border: 1px solid rgba(140,111,255,0.4) !important;
+  border: 1px solid rgba(140,155,255,0.4) !important;
 }
-.btn-info:hover, .btn-info:focus { background: rgba(140,111,255,0.28); color: var(--text); }
+.btn-info:hover, .btn-info:focus { background: rgba(140,155,255,0.24); color: var(--text); }
 
 .btn-dark {
   background: var(--surface-2);
   color: var(--text);
   border: 1px solid var(--border-strong) !important;
 }
-.btn-dark:hover, .btn-dark:focus { background: var(--bg-elevated); color: var(--mint); }
+.btn-dark:hover, .btn-dark:focus { background: var(--surface); color: var(--mint); }
 
 .btn-outline-light {
   background: transparent;
@@ -228,7 +247,7 @@ h2.animated-title {
 }
 
 .model-btn .badge {
-  background: rgba(4,18,14,0.35) !important;
+  background: rgba(0,0,0,0.35) !important;
   color: inherit !important;
 }
 
@@ -333,7 +352,7 @@ table.table-striped td, table.table-striped th {
   border: 1px solid var(--border-strong);
   padding: 12px 18px;
   border-radius: var(--radius-sm);
-  box-shadow: 0 12px 30px rgba(13,27,54,0.16), 0 0 20px rgba(0,169,143,0.10);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 24px rgba(0,230,184,0.12);
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -373,7 +392,7 @@ table.table-striped td, table.table-striped th {
   background: var(--surface-2);
   border-color: var(--sky-deep);
   color: var(--text);
-  box-shadow: 0 0 0 3px rgba(140,111,255,0.2);
+  box-shadow: 0 0 0 3px rgba(140,155,255,0.2);
 }
 
 .text-muted { color: var(--text-faint) !important; }
@@ -390,22 +409,22 @@ table.table-striped td, table.table-striped th {
 .alert-warning {
   background: var(--amber-dim);
   color: var(--amber);
-  border-color: rgba(201,122,0,0.35);
+  border-color: rgba(255,176,32,0.35);
 }
 .alert-danger {
   background: var(--coral-dim);
-  color: var(--coral-deep);
-  border-color: rgba(226,59,118,0.35);
+  color: var(--coral);
+  border-color: rgba(255,92,124,0.35);
 }
 .alert-success {
   background: var(--mint-dim);
-  color: var(--mint-deep);
+  color: var(--mint);
   border-color: var(--border-strong);
 }
 .alert-info {
   background: var(--sky-dim);
-  color: var(--sky-deep);
-  border-color: rgba(106,76,240,0.35);
+  color: var(--sky);
+  border-color: rgba(140,155,255,0.35);
 }
 
 /* ============================================================
@@ -442,7 +461,7 @@ body.p-4 { padding: 32px !important; }
   content: "";
   position: absolute;
   inset: -40px;
-  background: radial-gradient(circle at 50% 0%, rgba(0,169,143,0.14), transparent 65%);
+  background: radial-gradient(circle at 50% 0%, rgba(0,230,184,0.16), transparent 65%);
   pointer-events: none;
 }
 
@@ -451,7 +470,7 @@ body.p-4 { padding: 32px !important; }
   font-size: 10.5px;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--mint-deep);
+  color: var(--mint);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -460,17 +479,24 @@ body.p-4 { padding: 32px !important; }
 }
 .session-tag::before {
   content: "";
-  width: 5px; height: 5px; border-radius: 50%;
+  width: 6px; height: 6px; border-radius: 50%;
   background: var(--mint);
-  box-shadow: 0 0 6px rgba(0,169,143,0.6);
+  box-shadow: 0 0 0 0 rgba(0,230,184,0.55);
+  animation: live-pulse 2s ease-out infinite;
+}
+
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(0,230,184,0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(0,230,184,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,230,184,0); }
 }
 
 .login-logo {
-  width: 52px; height: 52px; border-radius: 12px;
+  width: 52px; height: 52px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 16px;
   background: linear-gradient(135deg, var(--mint-dim), var(--sky-dim));
-  border: 1px solid rgba(0,169,143,0.3);
+  border: 1px solid rgba(0,230,184,0.3);
   font-size: 24px;
   position: relative;
   z-index: 1;
@@ -496,6 +522,14 @@ body.p-4 { padding: 32px !important; }
 .toggle-password svg { width: 18px; height: 18px; }
 
 /* ============================================================
+   Dashboard header — reuses the login card's pulsing status dot
+   (.session-tag) so "Live Session" reads as an actual signal
+   ============================================================ */
+.row.mb-3.align-items-center .session-tag {
+  margin-bottom: 4px;
+}
+
+/* ============================================================
    Chat assistant — floating launcher + panel
    ============================================================ */
 .chat-toggle {
@@ -509,11 +543,11 @@ body.p-4 { padding: 32px !important; }
   color: #04120E;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(0,169,143,0.35), 0 14px 32px rgba(0,169,143,0.30);
+  box-shadow: 0 0 0 1px rgba(0,230,184,0.35), 0 14px 32px rgba(0,230,184,0.30);
   transition: transform 0.2s ease, background 0.2s ease;
   z-index: 1000;
 }
-.chat-toggle:hover { transform: translateY(-2px); background: #00C6A7; }
+.chat-toggle:hover { transform: translateY(-2px); background: #3CFFD6; }
 .chat-toggle svg { width: 24px; height: 24px; }
 
 .chat-panel {
@@ -527,7 +561,7 @@ body.p-4 { padding: 32px !important; }
   background: var(--bg-elevated);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
-  box-shadow: 0 24px 60px rgba(13,27,54,0.20);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -591,8 +625,8 @@ body.p-4 { padding: 32px !important; }
 .chat-msg.user {
   align-self: flex-end;
   background: var(--mint-dim);
-  border: 1px solid rgba(0,169,143,0.3);
-  color: var(--mint-deep);
+  border: 1px solid rgba(0,230,184,0.3);
+  color: var(--mint);
   font-weight: 500;
   border-bottom-right-radius: 4px;
 }
@@ -616,7 +650,7 @@ body.p-4 { padding: 32px !important; }
   border-radius: var(--radius-sm);
   background: var(--amber-dim);
   color: var(--amber);
-  border: 1px solid rgba(201,122,0,0.3);
+  border: 1px solid rgba(255,176,32,0.3);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -644,7 +678,7 @@ body.p-4 { padding: 32px !important; }
   background: var(--bg-elevated);
   border-color: var(--sky-deep);
   color: var(--text);
-  box-shadow: 0 0 0 3px rgba(106,76,240,0.15);
+  box-shadow: 0 0 0 3px rgba(140,155,255,0.15);
 }
 .chat-input-row .btn { flex-shrink: 0; }
 
