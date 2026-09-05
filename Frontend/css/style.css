@@ -497,9 +497,14 @@ body.p-4 { padding: 32px !important; }
   margin: 0 auto 16px;
   background: linear-gradient(135deg, var(--mint-dim), var(--sky-dim));
   border: 1px solid rgba(0,230,184,0.3);
-  font-size: 24px;
   position: relative;
   z-index: 1;
+  overflow: hidden;
+}
+.login-logo img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
 }
 
 .password-wrap { position: relative; }
