@@ -2,13 +2,14 @@
 
 Originally a single Flask app that server-rendered HTML. Now split into:
 
-- **`backend/`** — a Flask JSON API only (no templates). Trains/evaluates six
+- **`Backend/`** — a Flask JSON API only (no templates). Trains/evaluates six
   ML classifiers (Naive Bayes, Logistic Regression, SVM, Random Forest,
   XGBoost, LightGBM) on network traffic data and exposes everything over
   `/api/...` endpoints.
-- **`frontend/`** — plain HTML/CSS/JS (no framework, no build step) that
+- **`Frontend/`** — plain HTML/CSS/JS (no framework, no build step) that
   calls the backend over `fetch()`. Can be hosted anywhere that serves
-  static files.
+  static files. Dark "security operations" theme; see
+  [Frontend notes](#frontend-notes) below for how it's put together.
 
 They talk to each other over HTTP with a bearer token (returned at login),
 not cookies — this avoids cross-origin cookie headaches when frontend and
@@ -18,7 +19,7 @@ backend live on two different domains (e.g. two separate Render services).
 
 **Backend:**
 ```bash
-cd backend
+cd Backend
 python -m venv venv && source venv/bin/activate   # optional but recommended
 pip install -r requirements.txt
 python app.py
@@ -27,17 +28,17 @@ Runs on `http://127.0.0.1:5000`. Health check: `curl http://127.0.0.1:5000/api/h
 
 **Frontend:**
 ```bash
-cd frontend
+cd Frontend
 python -m http.server 8000
 ```
 Open `http://127.0.0.1:8000`. The page defaults to talking to
 `http://127.0.0.1:5000` automatically (see `js/config.js`) — no extra
 config needed for local use.
 
-Login with `admin` / `admin123`, upload `backend/dataset/train.csv` (or your
+Login with `admin` / `admin123`, upload `Backend/dataset/train.csv` (or your
 own CSV with an `attack_type` label column), click **Preprocess & Split**,
 train a model or two, then **Show Accuracy Graphs** or **Predict** on
-`backend/dataset/test.csv`.
+`Backend/dataset/test.csv`.
 
 ## Deploy to Render
 
@@ -57,16 +58,27 @@ in one shot:
 
 **If the frontend can't reach the backend** (e.g. you deployed them
 separately, not via the Blueprint): the frontend's default backend URL
-lives in `frontend/env.js` (or `js/config.js`'s `DEFAULT_API_BASE_URL` as
+lives in `Frontend/env.js` (or `js/config.js`'s `DEFAULT_API_BASE_URL` as
 a fallback). Update it to your backend's `.onrender.com` URL (no trailing
 slash) and redeploy the static site. You can also override it per-visit
 with a URL param: `?api=https://your-backend.onrender.com` — this saves
 to the browser's `localStorage` so it's remembered on later visits.
 
+**If it looks like the backend is unreachable but it's actually just
+asleep:** Render's free plan spins the backend down after ~15 minutes
+idle, and the first request after that can take 30–60s while it boots.
+`Frontend/js/warmup.js` pings `/api/health` the instant either page starts
+loading (before any other script) and keeps retrying in the background;
+`login.js`/`dashboard.js` show a "waking up the server" message and
+auto-retry the actual login/state calls a few times if they hit a
+network-level failure during that window. If you still see an error after
+~90s, the backend is genuinely down — check its logs in the Render
+dashboard rather than assuming it's just cold.
+
 ### Manual deploy (without the Blueprint)
 
 **Backend** — New + → Web Service → connect repo → set **Root Directory**
-to `backend`:
+to `Backend`:
 - Build command: `pip install -r requirements.txt`
 - Start command: `gunicorn app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT`
 - Env var: `SECRET_KEY` = any random string
@@ -77,7 +89,7 @@ to `backend`:
   `GROQ_CHAT_MODEL` (defaults to `openai/gpt-oss-120b`).
 
 **Frontend** — New + → Static Site → connect repo → set **Root Directory**
-to `frontend`:
+to `Frontend`:
 - Build command: (leave blank, or `echo "window.DEFAULT_API_BASE_URL = '';" > env.js`)
 - Publish directory: `.`
 - After deploy, set the backend URL via the in-page "Backend API" box as
@@ -86,39 +98,5 @@ to `frontend`:
 ### Important notes about this app's design (carried over from the original)
 
 - **State is in-memory, not per-user/per-database.** The uploaded dataset
-  and train/test split (`DATA_STORE` in `backend/app.py`) live in a single
-  global Python object shared by all users — fine for a single-user demo,
-  but **don't scale the backend to multiple Gunicorn workers/dynos**, each
-  worker has its own memory. The provided `Procfile`/`render.yaml`
-  intentionally use `--workers 1 --threads 4`.
-- Per-user state that *is* isolated: which models each logged-in user has
-  trained and their accuracies (`model_metrics`), keyed by that user's
-  bearer token.
-- **Storage is ephemeral on Render's free tier.** Uploaded CSVs and trained
-  `.joblib` models are written to local disk and wiped on redeploy/restart.
-  For persistence you'd need a persistent disk (paid plan) or external
-  storage (e.g. S3).
-- **XGBoost/LightGBM are optional.** If unavailable, those two "train"
-  buttons stay disabled and everything else still works.
-- **CORS** defaults to `*` (any origin) since auth is a bearer token, not
-  cookies, so there's no credentialed-CORS risk. Set the backend's
-  `CORS_ORIGINS` env var to your frontend's exact URL if you want to lock
-  it down.
-
-## API reference (backend)
-
-| Method | Path                              | Auth | Notes |
-|---|---|---|---|
-| GET  | `/api/health`                     | no  | liveness check |
-| POST | `/api/auth/login`                 | no  | `{username, password}` → `{token}` |
-| POST | `/api/auth/logout`                | yes | invalidates the token |
-| GET  | `/api/state`                      | yes | logs, dataset preview, trained-model metrics |
-| POST | `/api/dataset/upload`             | yes | multipart `file` (CSV) |
-| POST | `/api/dataset/preprocess`         | yes | clean, encode, scale, split, (SMOTE if available) |
-| POST | `/api/models/train/<model_name>`  | yes | `naive_bayes`, `logistic`, `svm`, `random_forest`, `xgboost`, `lightgbm` |
-| GET  | `/api/models/graphs`              | yes | base64 PNG accuracy bar + pie charts |
-| GET  | `/api/models/confusion/<model>`   | yes | base64 PNG confusion matrix |
-| POST | `/api/predict`                    | yes | multipart `file` (CSV), uses best-accuracy trained model |
-| POST | `/api/chat`                       | yes | `{message, history?}` → `{reply}`. Requires `GROQ_API_KEY`; the assistant answers grounded in the current dataset/model/prediction state |
-
-All authenticated routes expect `Authorization: Bearer <token>`.
+  and train/test split (`DATA_STORE` in `Backend/app.py`) live in a single
+  global Python object shared by all users — fine for a
