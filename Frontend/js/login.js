@@ -15,16 +15,6 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-async function checkBackendOnce() {
-  // Silent background check — only surfaces a message if the backend
-  // is actually unreachable, instead of a permanent status bar.
-  try {
-    await Api.health();
-  } catch (e) {
-    showFlash("Backend is waking up or unreachable — this can take up to a minute on first load.", "warning");
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   // Already logged in? Skip straight to the dashboard.
   if (getToken()) {
@@ -32,7 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  checkBackendOnce();
+  // warmup.js (loaded before this file, at the very top of <head>) already
+  // started pinging the backend the moment the page began loading — this
+  // just reflects that status instead of starting a fresh check.
+  const warmup = window.BackendWarmup;
+  if (warmup && !warmup.ready) {
+    showFlash("Waking up the server… this can take up to a minute on the first load.", "warning");
+    warmup.onReady(() => clearFlash());
+    document.addEventListener("backend:timeout", () => {
+      showFlash("The backend is taking longer than usual to wake up. You can still try logging in below.", "warning");
+    });
+  }
 
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -47,17 +47,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn = document.getElementById("loginBtn");
     const original = btn.innerHTML;
-    btn.innerHTML = "Working…";
     btn.classList.add("btn-loading");
 
-    try {
-      const resp = await Api.login(username, password);
-      setToken(resp.token);
-      window.location.href = "dashboard.html";
-    } catch (err) {
-      showFlash(err.message);
-      btn.innerHTML = original;
-      btn.classList.remove("btn-loading");
+    // If the backend is still cold, a single attempt can fail with a
+    // network-level error before the container finishes booting. Retry a
+    // few times automatically in that case, but never for real auth
+    // failures (wrong password etc.), which come back as a normal HTTP
+    // error with a status code, not a fetch exception.
+    const MAX_ATTEMPTS = 4;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      btn.innerHTML = attempt === 1 ? "Working…" : `Waking server, retrying… (${attempt}/${MAX_ATTEMPTS})`;
+      try {
+        const resp = await Api.login(username, password);
+        setToken(resp.token);
+        window.location.href = "dashboard.html";
+        return;
+      } catch (err) {
+        const isNetworkError = err.status === undefined;
+        const isLastAttempt = attempt === MAX_ATTEMPTS;
+        if (isNetworkError && !isLastAttempt) {
+          await new Promise((r) => setTimeout(r, 3000));
+          continue;
+        }
+        showFlash(err.message);
+        btn.innerHTML = original;
+        btn.classList.remove("btn-loading");
+        return;
+      }
     }
   });
 });

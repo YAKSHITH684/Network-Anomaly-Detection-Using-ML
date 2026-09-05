@@ -115,10 +115,12 @@ function renderModelButtons(state) {
   }
 }
 
-async function loadState() {
+async function loadState(attempt = 1) {
+  const MAX_ATTEMPTS = 4;
   try {
     const state = await Api.state();
     currentState = state;
+    clearFlash();
     document.getElementById("whoami").textContent = state.username;
     renderLogs(state.logs);
     if (state.preview) {
@@ -131,6 +133,15 @@ async function loadState() {
     if (err.status === 401) {
       clearToken();
       window.location.href = "index.html";
+      return;
+    }
+    // Network-level failure (fetch threw, no HTTP status) usually means the
+    // backend is still waking up from a Render cold start — retry a few
+    // times instead of surfacing a scary error immediately.
+    const isNetworkError = err.status === undefined;
+    if (isNetworkError && attempt < MAX_ATTEMPTS) {
+      showFlash(`Waking up the server… retrying (${attempt}/${MAX_ATTEMPTS})`, "warning");
+      setTimeout(() => loadState(attempt + 1), 3000);
       return;
     }
     showFlash(err.message);
@@ -271,6 +282,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!getToken()) {
     window.location.href = "index.html";
     return;
+  }
+
+  // warmup.js (loaded first, at the top of <head>) started pinging the
+  // backend the instant this page began loading — reflect its status here.
+  const warmup = window.BackendWarmup;
+  if (warmup && !warmup.ready) {
+    showFlash("Waking up the server… this can take up to a minute on the first load.", "warning");
   }
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
