@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://res.cloudinary.com/dfzdsdoa5/image/upload/v1792135101/network_p66mje.png" alt="NetSentinel: Network Anomaly Detection Using ML" width="100%">
+<img src="https://res.cloudinary.com/dfzdsdoa5/image/upload/v1792135101/network_p66mje.png" alt="NetSentinel: Network Anomaly Detection Using ML" width="20%">
 
 <br><br>
 
