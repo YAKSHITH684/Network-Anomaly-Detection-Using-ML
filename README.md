@@ -1,16 +1,18 @@
+<div align="center">
 
-
-<img src="https://res.cloudinary.com/dfzdsdoa5/image/upload/v1792135101/network_p66mje.png" alt="NetSentinel: Network Anomaly Detection Using ML" width="10%">
-
-<br><br>
-
-# NetSentinel
-
-### Network Anomaly Detection Using Machine Learning
-
-**Upload data • Train six models • Compare results • Detect threats**
-
-An end-to-end ML platform with a Flask backend and an interactive SOC-style dashboard for classifying network traffic as normal or anomalous.
+<table>
+<tr>
+<td width="240" align="center">
+<img src="https://res.cloudinary.com/dfzdsdoa5/image/upload/v1792135101/network_p66mje.png" alt="NetSentinel logo" width="220">
+</td>
+<td>
+<h1>NetSentinel</h1>
+<h3>Network Anomaly Detection Using Machine Learning</h3>
+<p><b>Upload data • Train six models • Compare results • Detect threats</b></p>
+<p>An end-to-end ML platform with a Flask backend and an interactive SOC-style dashboard for classifying network traffic as normal or anomalous.</p>
+</td>
+</tr>
+</table>
 
 <br>
 
