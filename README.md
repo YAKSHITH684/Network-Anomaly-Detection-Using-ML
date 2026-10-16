@@ -16,6 +16,7 @@
 
 <br>
 
+[![Live App](https://img.shields.io/badge/Live%20App-Online-brightgreen?style=for-the-badge)](https://network-anomaly-detection-using-ml-1.onrender.com/)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
@@ -23,7 +24,7 @@
 
 <br>
 
-**[📂 View Source](https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML)** · **[🐞 Report a Bug](https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML/issues)**
+**[🚀 Live Demo](https://network-anomaly-detection-using-ml-1.onrender.com/)** · **[📂 View Source](https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML)** · **[🐞 Report a Bug](https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML/issues)**
 
 </div>
 
@@ -31,6 +32,7 @@
 
 ## 📑 Table of Contents
 
+- [Live Demo](#-live-demo)
 - [Overview](#-overview)
 - [Features](#-features)
 - [How It Works](#-how-it-works)
@@ -43,6 +45,14 @@
 - [Contributing](#-contributing)
 - [License](#-license)
 - [Author](#-author)
+
+---
+
+## 🌐 Live Demo
+
+🚀 **Live Application:** [network-anomaly-detection-using-ml-1.onrender.com](https://network-anomaly-detection-using-ml-1.onrender.com/)
+
+📂 **GitHub Repository:** [github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML](https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML)
 
 ---
 
@@ -160,6 +170,8 @@ Open **http://localhost:5500** in your browser, and point the dashboard at your 
 ---
 
 ## ☁️ Deployment on Render
+
+**Live URL:** [network-anomaly-detection-using-ml-1.onrender.com](https://network-anomaly-detection-using-ml-1.onrender.com/)
 
 The repo ships with a `render.yaml` Blueprint that creates **two services** from one repo:
 
