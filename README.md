@@ -4,13 +4,11 @@
 A Machine Learning-based web application that analyzes network traffic and identifies whether it is **Normal** or **Anomalous/Attack Traffic**.
 
 <p align="center">
-  <a href="https://network-anomaly-detection-using-ml-1.onrender.com">
-    <strong>🚀 Try Live Demo</strong>
-  </a>
+  <a href="https://network-anomaly-detection-using-ml-1.onrender.com"><strong>🚀 Try Live App</strong></a>
   &nbsp; • &nbsp;
-  <a href="https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML">
-    <strong>📂 GitHub Repository</strong>
-  </a>
+  <a href="https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML"><strong>📂 GitHub Repository</strong></a>
+  &nbsp; • &nbsp;
+  <a href="https://github.com/YAKSHITH684/Network-Anomaly-Detection-Using-ML/issues"><strong>🐞 Report a Bug</strong></a>
 </p>
 
 ---
