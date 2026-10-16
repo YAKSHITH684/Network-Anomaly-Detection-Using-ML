@@ -1,5 +1,8 @@
+<p align="center">
+  <img src="https://res.cloudinary.com/dfzdsdoa5/image/upload/v1792135101/network_p66mje.png" alt="Network Anomaly Detection Logo" width="150" align="left">
+</p>
 
-# 🚨 Network Anomaly Detection Using Machine Learning
+#  Network Anomaly Detection Using Machine Learning
 
 A Machine Learning-based web application that analyzes network traffic and identifies whether it is **Normal** or **Anomalous/Attack Traffic**.
 
